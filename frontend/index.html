@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>img2wav</title>
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css"
+      type="text/css"
+    />
+    <script src="./script.js" defer></script>
+    <script src="./p5/p5.js"></script>
+    <script src="./p5/addons/p5.sound.js"></script>
+  </head>
+  <body>
+    <h1></h1>
+    <div>
+      <img id="output_image" height="250px" width="250px" />
+      <form action="#">
+        <input type="file" onchange="preview_image(event)" />
+        <button type="button" onclick="submit_form(event)">Submit Image</button>
+      </form>
+      <script type="text/javascript">
+        let readerResult;
+        function preview_image(event) {
+          var reader = new FileReader();
+          reader.onload = function () {
+            var output = document.getElementById("output_image");
+            output.src = reader.result;
+            readerResult = reader.result;
+          };
+          reader.readAsDataURL(event.target.files[0]);
+        }
+
+        function submit_form(event) {
+          event.preventDefault();
+          fetch("http://localhost:5001/upload-image", {
+            method: "POST",
+            mode: "cors",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ file: readerResult }),
+          })
+            .then((res) => res.json())
+            .then((res) => {
+              console.log(`Response from Notes`, res);
+            });
+        }
+      </script>
+    </div>
+  </body>
+</html>
