@@ -21,16 +21,18 @@ function playSynth() {
     var notes = []
     fetch("http://localhost:5001/getnotes", options).then(res => res.json()).then(res => {
         console.log(`INSIDE SCRIPT.JS`, res)
-        notes.push(...res)
-    })
-    console.log(notes)
-    let note = random(notes);
-    // note velocity (volume, from 0 to 1)
-    let velocity = random();
-    // time from now (in seconds)
-    let time = 0;
-    // note duration (in seconds)
-    let dur = 1 / 6;
+        notes.push(...res['notes'])
+        
+        console.log(notes)
+    
+        let note = random(notes);
+        // note velocity (volume, from 0 to 1)
+        let velocity = random();
+        // time from now (in seconds)
+        let time = 0;
+        // note duration (in seconds)
+        let dur = 1 / 6;
 
-    monoSynth.play(note, velocity, time, dur);
+        monoSynth.play(note, velocity, time, dur);
+    })
 }
