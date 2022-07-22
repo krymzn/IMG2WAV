@@ -16,8 +16,14 @@ const options = {
 }
 
 let hslValuesArray = []
+let hexArray=[]
 
 let notes = []
+let palette = [];
+
+function getPalette(colors) {
+    palette.push(colors)
+}
 
 function getNotes(hslArr) {
     console.log('hslArr', hslArr)
@@ -52,10 +58,15 @@ function getNotes(hslArr) {
 server.post("/upload-image", (req, res) => {
     console.log("REQUEST BODY", req.body)
     notes = []
+    palette=[]
     let base64Data = req.body.file.replace(/^data:image\/(png|jpg|jpeg);base64,/, "");
 
     require("fs").writeFile("out.jpeg", base64Data, 'base64', function (err) {
         getColors(path.join(__dirname, 'out.jpeg'), options).then(colors => {
+            hexArray = (colors.map((color) => color.hex()));
+            for (let i = 0; i < hexArray.length; i++) {
+              getPalette(hexArray[i]);
+            }
             hslValuesArray = colors.map(color => color.hsl())
             for (let i = 0; i < hslValuesArray.length; i++) {
                 getNotes(hslValuesArray[i])
@@ -68,6 +79,12 @@ server.post("/upload-image", (req, res) => {
 server.get("/getnotes", (req, res) => {
     res.json({ notes })
 })
+
+server.get("/getPalette", (req, res) => {
+  res.json({ palette });
+});
+
+
 
 
 server.listen("5001", () => { console.log(`Server running at http://localhost:5000`) })
