@@ -2,52 +2,58 @@
 <html>
   <head>
     <title>img2wav</title>
-    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css"
-      type="text/css"
-    />
-    <script src="./script.js" defer></script>
+    <script src="./script.js"></script>
     <script src="./p5/p5.js"></script>
     <script src="./p5/addons/p5.sound.js"></script>
-    <script
-      type="text/javascript"
-      src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"
-    ></script>
   </head>
   <body>
     <h1></h1>
-    <div style="display:flex;justify-content: center;">
-      <img src="../out.jpeg" id="output_image" height="250px" width="250px" />
+    <div style="display: flex; justify-content: center">
+      <img
+        src="../out.jpeg"
+        alt="cat image"
+        id="output_image"
+        height="250px"
+        width="250px"
+      />
     </div>
-    <div style="display: flex;justify-content: center;padding-top: 1rem;padding-bottom: 1rem;" id="boxes"></div>
+    <div
+      style="
+        display: flex;
+        justify-content: center;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+      "
+      id="boxes"
+    ></div>
     <script>
       window.onload = function () {
-        console.log("I am here");
-        let color = [];
-        const options = {
-          method: "GET",
-          "Content-Type": "application/json",
-        };
-        fetch("http://localhost:5001/getPalette", options)
-          .then((res) => res.json())
-          .then((res) => {
-            // console.log(res['palette'])
-            color.push(...res["palette"]);
-        displayBoxes(color);
-          });
+        setTimeout(() => {
+          console.log("I am here");
+          let color = [];
+          const options = {
+            method: "GET",
+            "Content-Type": "application/json",
+          };
+          fetch("http://localhost:5001/getPalette", options)
+            .then((res) => res.json())
+            .then((res) => {
+              // console.log(res['palette'])
+              color.push(...res["palette"]);
+              displayBoxes(color);
+            });
+        }, 2000);
       };
       function displayBoxes(color) {
         let div = "";
         for (let i in color) {
-            console.log(color[i])
+          console.log(color[i]);
           div +=
             "<div style='height: 100px;width: 60px;background-color:" +
             color[i] +
             ";'></div>";
         }
-        console.log(div)
+        console.log(div);
         document.getElementById("boxes").innerHTML = div;
       }
     </script>

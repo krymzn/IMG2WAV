@@ -2,26 +2,30 @@
 <html>
   <head>
     <title>img2wav</title>
-    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css"
-      type="text/css"
-    />
-    <script
-      type="text/javascript"
-      src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"
-    ></script>
   </head>
   <body>
     <h1></h1>
-    <div style="display: flex;flex-direction: column;justify-content: center;align-items: center;" >
-      <img style="padding-top: 1rem;padding-bottom: 1rem;" id="output_image" height="250px" width="250px" />
-      <form action="#">
+    <div
+      style="
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      "
+    >
+      <img
+        style="padding-top: 1rem; padding-bottom: 1rem"
+        id="output_image"
+        height="250px"
+        width="250px"
+      />
+      <form>
         <input type="file" onchange="preview_image(event)" />
-        <button type="button" onclick="submit_form(event)">Submit Image</button>
+        <button type="submit" onclick="submit_form(event)">Submit Image</button>
       </form>
+
       <script type="text/javascript">
+        console.log(`SCRIPT CALLLED`);
         let readerResult;
         function preview_image(event) {
           var reader = new FileReader();
@@ -34,6 +38,7 @@
         }
 
         function submit_form(event) {
+          console.log(`SUBMIT FORM CALLLED`);
           event.preventDefault();
           fetch("http://localhost:5001/upload-image", {
             method: "POST",
@@ -43,43 +48,17 @@
             },
             body: JSON.stringify({ file: readerResult }),
           })
-            .then((res) => res.json())
             .then((res) => {
-              console.log(`Response from Notes`, res);
+              console.log("FETCH RESPONSE", res);
+              localStorage.setItem("FETCH RES", res);
+            })
+            .catch((err) => {
+              console.log("FETCH ERROR", err);
+              localStorage.setItem("FETCH ERR", err);
             });
-          window.location.replace("play.html");
-          //     $('#form-fields').submit(function(){
-          //       console.log('inside')
-          // $(this).hide();
-          // })
+          // window.location.href = "play.html";
         }
       </script>
     </div>
-    <!-- <script>
-      const fs = require("fs");
-      window.onload = function () {
-        
-        console.log('I am here')
-        
-
-        const path = "../out.jpeg";
-        console.log(path)
-        try {
-          fs.unlinkSync(path);
-          console.log("File removed:", path);
-        } catch (err) {
-          console.error(err);
-        }
-      };
-    </script> -->
-    <!-- <script>
-        document.forms['myFirstForm'].addEventListener('submit', function (event) {
-            // Do something with the form's data here
-            console.log('inside')
-            this.style['display'] = 'none';
-            event.preventDefault();
-        });
-    
-      </script>   -->
   </body>
 </html>
